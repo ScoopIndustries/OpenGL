@@ -32,6 +32,9 @@ public:
 	//Camera Front
 	glm::vec3 cameraFront;
 
+	float camX;
+	float camZ;
+
 	APP()
 	{
 		cameraPosition = glm::vec3(0.0f, 0.0f, 0.3f);
@@ -41,7 +44,6 @@ public:
 		cameraRight = glm::normalize(glm::cross(up, cameraDirection));
 		cameraUp = glm::cross(cameraDirection, cameraRight);
 		cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
-
 	}
 
 	void InputHandler(bool& appRunning, SDL_Event& event, std::chrono::steady_clock::time_point& prevTime)
@@ -58,14 +60,18 @@ public:
 			case SDLK_ESCAPE:
 				appRunning = false;
 				break;
-			case SDLK_z:
-				cameraPosition += cameraSpeed * cameraFront;
+			case SDLK_a:
+				camX = glm::sin(resultCloak) * cameraSpeed;
+				camZ = glm::cos(resultCloak) * cameraSpeed;
+				cameraPosition = glm::vec3(camX, 0.0, camZ);
 				break;
 			case SDLK_q:
 				cameraPosition -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
 				break;
-			case SDLK_s:
-				cameraPosition -= cameraSpeed * cameraFront;
+			case SDLK_e:
+				camX = glm::sin(resultCloak) * cameraSpeed;
+				camZ = glm::cos(resultCloak) * cameraSpeed;
+				cameraPosition = glm::vec3(camX, 0.0, camZ);
 				break;
 			case SDLK_d:
 				cameraPosition += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
@@ -110,7 +116,7 @@ int main(int argc, char* argv[])
 		}
 		//LookAt
 		glm::mat4 view;
-		view = glm::lookAt(app.cameraPosition, app.cameraPosition + app.cameraFront, app.up);
+		view = glm::lookAt(app.cameraPosition, app.cameraTarget, glm::vec3(0.0, 1.0, 0.0));
 		glMatrixMode(GL_MODELVIEW);
 		glLoadMatrixf(&view[0][0]);
 
