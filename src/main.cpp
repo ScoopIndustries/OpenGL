@@ -5,9 +5,8 @@
 
 #include<SDL.h>
 #include<SDL_opengl.h>
-
 #include<gl/GL.h>
-#include"gc_3d_defs.hpp"
+#include"../Header/gc_3d_defs.hpp"
 
 using namespace GC_3D;
 
