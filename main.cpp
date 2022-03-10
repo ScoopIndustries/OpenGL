@@ -11,6 +11,12 @@
 
 using namespace GC_3D;
 
+class Controls
+{
+    Controls() {};
+    
+
+};
 	int main(int argc, char* argv[])
 	{
 		SDL_Init(SDL_INIT_VIDEO);
@@ -165,6 +171,7 @@ using namespace GC_3D;
             20, 21, 22, 20, 22, 23 //Down
             };
 
+            
 			geo.Bind();
 			geo.Draw();
 
