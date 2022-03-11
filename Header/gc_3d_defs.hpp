@@ -1,9 +1,23 @@
+#pragma once
+
 #include <chrono>
+
+#include <GL/glew.h>
+#include <gl/GL.h>
+
+#include <vector>
+#include <cstdio>
+#include <iostream>
+#include <stdio.h>
+#include <string.h>
+#include <algorithm>
+#include <fstream>
+#include <sstream>
 
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>
-
-#include <vector>;
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/transform.hpp>
 
 namespace GC_3D
 {
@@ -35,49 +49,12 @@ namespace GC_3D
       void Draw() const;
   };
 
-  void Geometry::Bind() const
-  {
-      // Set each attribute pointer, if we have data for it.
-      if (!m_Pos.empty())
-      {
-          glEnableClientState(GL_VERTEX_ARRAY);
-          glVertexPointer(3, GL_FLOAT, sizeof(vec3), m_Pos.data());
-      }
-      else
-      {
-          glDisableClientState(GL_VERTEX_ARRAY);
-      }
-      if (!m_Normals.empty())
-      {
-          glEnableClientState(GL_NORMAL_ARRAY);
-          glNormalPointer(GL_FLOAT, sizeof(vec3), m_Normals.data());
-      }
-      else
-      {
-          glDisableClientState(GL_NORMAL_ARRAY);
-      }
-      if (!m_TexCoord.empty())
-      {
-          glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-          glTexCoordPointer(2, GL_FLOAT, sizeof(vec2), m_TexCoord.data());
-      }
-      else
-      {
-          glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-      }
-  }
+ 
 
-  void Geometry::Draw() const
+  struct BoundingSphere
   {
-      if (!m_Indices.empty())
-      {
-          glDrawElements(GL_TRIANGLES, m_Indices.size(), GL_UNSIGNED_INT, m_Indices.data());
-      }
-      else
-      {
-          glDrawArrays(GL_TRIANGLES, 0, m_Pos.size());
-      }
-  }
-
+      vec3 m_Center;
+      float m_Radius;
+  };
 
 }
