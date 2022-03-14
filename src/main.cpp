@@ -72,15 +72,17 @@ int main(int argc, char* argv[])
         glm::vec3(-1.3f,  1.0f, -1.5f)
     };
     
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //Buffer
     unsigned int VBO, VAO;
     glGenVertexArrays(1, &VAO);
     glBindVertexArray(VAO);
-
     m_Buffer.CreateBuffer(CubeVertices, sizeof(CubeVertices));
     m_Buffer.BindBufferToAttrib(0, 3, 5 * sizeof(float), 0);
     m_Buffer.BindBufferToAttrib(1, 2, 5 * sizeof(float), (3 * sizeof(float)));
-
-    // load and create a texture 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    
+    // load and create a texture -- Texture
         // -------------------------
     unsigned int texture1, texture2;
     // texture 1
@@ -143,10 +145,13 @@ int main(int argc, char* argv[])
     glUniform1i(glGetUniformLocation(ourShader.ID, "texture1"), 0);
     // or set it via the texture class
     ourShader.setInt("texture2", 1);
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    //
     auto prevTime = startTime;
-
 	bool appRunning = true;
+    //
+
 	while (appRunning)
 	{
         auto curTime = Clock::now();
@@ -172,8 +177,6 @@ int main(int argc, char* argv[])
                 cos(horizontalAngle - 3.14f / 2.0f)
             );
             Vup = cross(Vright, Vdirection);
-
-
             // Compute new orientation
             horizontalAngle += mouseSpeed * Seconds(ftime) * float(1024 / 2 - x);
             verticalAngle += mouseSpeed * Seconds(ftime) * float(768 / 2 - y);
@@ -199,10 +202,8 @@ int main(int argc, char* argv[])
                 position -= Vright * Seconds(ftime) * speed;
 			}
 		}
-
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // also clear the depth buffer now!
-
         // create transformations
         glm::mat4 view = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
         glm::mat4 projection = glm::mat4(1.0f);
@@ -213,23 +214,17 @@ int main(int argc, char* argv[])
             position + Vdirection,
             Vup
         );
-        
         // pass transformation matrices to the shader
         ourShader.setMat4("projection", projection); // note: currently we set the projection matrix each frame, but since the projection matrix rarely changes it's often best practice to set it outside the main loop only once.
         ourShader.setMat4("view", view);
 
         // render boxes
-
         for (unsigned int i = 0; i < 10; i++)
         {
             shape.DrawCube(cubePositions[i], true, 50.0f, i, ourShader);
         }    
-
-        
         SDL_GL_SwapWindow(win);
 	}
-
-    
     glDeleteVertexArrays(1, &VAO);
     glDeleteBuffers(1, &VBO);
 
