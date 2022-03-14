@@ -6,7 +6,7 @@ include(${CMAKE_CURRENT_SOURCE_DIR}/glew.cmake)
 
 set(SDL_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/dep/SDL/include)
 set(GLM_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/dep/glm)
-add_executable(moteur "src/main.cpp" "Header/gc_3d_defs.hpp" "Header/camera.hpp" "src/camera.cpp" "src/Geometry.cpp" "Shader/loadShader.cpp" "Header/shader.hpp" "Header/Buffer.hpp" "src/Buffer.cpp"  )
+add_executable(moteur "src/main.cpp" "Header/gc_3d_defs.hpp" "Header/camera.hpp" "src/camera.cpp" "src/Geometry.cpp" "Shader/loadShader.cpp" "Header/shader.hpp" "Header/Buffer.hpp" "src/Buffer.cpp"   "src/Shape.cpp" "Header/Shape.hpp")
 target_include_directories(moteur PRIVATE 
 	${SDL_INCLUDE_DIR}
 	${GLM_INCLUDE_DIR}

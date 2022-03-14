@@ -8,5 +8,5 @@ class Buffer
 
 public:
     void CreateBuffer(const GLfloat* iData, size_t iSize);
-    void BindBuffer(int attribut);
+    void BindBufferToAttrib(int attribut, int size, int stride, int arrayOffset);
 };

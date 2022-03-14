@@ -8,17 +8,17 @@ void Buffer::CreateBuffer(const GLfloat* iData, size_t iSize)
     glBufferData(GL_ARRAY_BUFFER, iSize, iData, GL_STATIC_DRAW);
 }
 
-void Buffer::BindBuffer(int attribut)
+void Buffer::BindBufferToAttrib(int attribut, int size, int stride, int arrayOffset)
 {
     // 1rst attribute buffer : vertices
     glEnableVertexAttribArray(attribut);
     glBindBuffer(GL_ARRAY_BUFFER, m_buffer);
     glVertexAttribPointer(
         attribut,                  // attribute 0. No particular reason for 0, but must match the layout in the shader.
-        3,                  // size
+        size,                  // size
         GL_FLOAT,           // type
         GL_FALSE,           // normalized?
-        0,                  // stride
-        (void*)0            // array buffer offset
+        stride,                  // stride
+        (void*)arrayOffset            // array buffer offset
     );
 }
