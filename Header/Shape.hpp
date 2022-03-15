@@ -10,7 +10,6 @@ namespace GC_3D
 		
 	public:
         void DrawCube(vec3 Position, bool rotateShape, float angle, float i, Shader shader);
-		
 	};
 
 	static const float CubeVertices[] = {

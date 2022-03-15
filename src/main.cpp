@@ -3,8 +3,7 @@
 #endif
 #define STB_IMAGE_IMPLEMENTATION
 #include<SDL.h>
-
-
+#include "imgui.h"
 #include "../Header/stb_image.h"
 #include "../Header/camera.hpp"
 #include "../Header/Buffer.hpp"
@@ -53,8 +52,14 @@ int main(int argc, char* argv[])
 	glewInit();
     Shape shape;
     Buffer m_Buffer;
-	//Shader ourShader = Shader("D:/WKLEIN/OpenGL/Shader/SimpleVertexShader.vertexshader", "D:/WKLEIN/OpenGL/Shader/SimpleFragmentShader.fragmentshader");
-	Shader ourShader = Shader("D:/ProjetOPENGL/OpenGL/Shader/SimpleVertexShader.vertexshader", "D:/ProjetOPENGL/OpenGL/Shader/SimpleFragmentShader.fragmentshader");
+    Geometry MakeSphere;
+    MakeSphere = MakeSphere.MakeSphere(1.0f);
+    for (int i = 0; i < MakeSphere.m_Pos.size(); i++)
+    {
+        std::cout << MakeSphere.m_Pos[i].x << ' ' << MakeSphere.m_Pos[i].y << ' ' << MakeSphere.m_Pos[i].z << std::endl;   // problem line
+    }
+	Shader ourShader = Shader("D:/WKLEIN/OpenGL/Shader/SimpleVertexShader.vertexshader", "D:/WKLEIN/OpenGL/Shader/SimpleFragmentShader.fragmentshader");
+	//Shader ourShader = Shader("D:/ProjetOPENGL/OpenGL/Shader/SimpleVertexShader.vertexshader", "D:/ProjetOPENGL/OpenGL/Shader/SimpleFragmentShader.fragmentshader");
 
     glEnable(GL_DEPTH_TEST);
 
@@ -80,6 +85,24 @@ int main(int argc, char* argv[])
     m_Buffer.CreateBuffer(CubeVertices, sizeof(CubeVertices));
     m_Buffer.BindBufferToAttrib(0, 3, 5 * sizeof(float), 0);
     m_Buffer.BindBufferToAttrib(1, 2, 5 * sizeof(float), (3 * sizeof(float)));
+
+    //Buffer posBuff, normBuff, uvBuff;
+    //
+    //posBuff.CreateBuffer((float const*)MakeSphere.m_Pos.data(), MakeSphere.m_Pos.size()* sizeof(vec3));
+    //normBuff.CreateBuffer((float const*)MakeSphere.m_Normals.data(), MakeSphere.m_Normals.size() * sizeof(vec3));
+    //uvBuff.CreateBuffer((float const*)MakeSphere.m_TexCoord.data(), MakeSphere.m_TexCoord.size() * sizeof(vec3));
+    //
+    //posBuff.BindBufferToAttrib(0, 3, 3 * sizeof(float), 0);
+    //uvBuff.BindBufferToAttrib(1, 2, 2 * sizeof(float), 0);
+    //
+    //uint32_t IBO;
+    //glGenBuffers(1, &IBO);
+    //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO);
+    //glBufferData(GL_ELEMENT_ARRAY_BUFFER, MakeSphere.m_Indices.size(), MakeSphere.m_Indices.data(), GL_STATIC_DRAW);
+
+    //MakeSphere.Bind();
+    //MakeSphere.Draw();
+
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     
     // load and create a texture -- Texture
@@ -99,8 +122,8 @@ int main(int argc, char* argv[])
     int width, height, nrChannels;
     stbi_set_flip_vertically_on_load(false); // tell stb_image.h to flip loaded texture's on the y-axis.
     // The FileSystem::getPath(...) is part of the GitHub repository so we can find files on any IDE/platform; replace it with your own image path.
-    unsigned char* data = stbi_load("D:/ProjetOPENGL/OpenGL/Sprite/container.jpg", &width, &height, &nrChannels, 0);
     //unsigned char* data = stbi_load("D:/ProjetOPENGL/OpenGL/Sprite/container.jpg", &width, &height, &nrChannels, 0);
+    unsigned char* data = stbi_load("D:/WKLEIN/OpenGL/Sprite/container.jpg", &width, &height, &nrChannels, 0);
     if (data)
     {
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
@@ -122,7 +145,7 @@ int main(int argc, char* argv[])
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     // load image, create texture and generate mipmaps
-    data = stbi_load("D:/ProjetOPENGL/OpenGL/Sprite/awesomeface.png", &width, &height, &nrChannels, 0);
+    data = stbi_load("D:/WKLEIN/OpenGL/Sprite/awesomeface.png", &width, &height, &nrChannels, 0);
     //data = stbi_load("D:/ProjetOPENGL/OpenGL/Sprite/awesomeface.png", &width, &height, &nrChannels, 0);
     if (data)
     {
@@ -147,15 +170,14 @@ int main(int argc, char* argv[])
     glUniform1i(glGetUniformLocation(ourShader.ID, "texture1"), 0);
     // or set it via the texture class
     ourShader.setInt("texture2", 1);
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    //
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     auto prevTime = startTime;
 	bool appRunning = true;
     //
 
 	while (appRunning)
 	{
+
         auto curTime = Clock::now();
         Duration ftime = prevTime - curTime;
         prevTime = curTime;
@@ -204,12 +226,13 @@ int main(int argc, char* argv[])
                 position -= Vright * Seconds(ftime) * speed;
 			}
 		}
+
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // also clear the depth buffer now!
         // create transformations
         glm::mat4 view = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
         glm::mat4 projection = glm::mat4(1.0f);
-        projection = glm::perspective(glm::radians(45.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+        projection = glm::perspective(glm::radians(90.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
         //view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
         view = lookAt(
             position,
@@ -220,11 +243,26 @@ int main(int argc, char* argv[])
         ourShader.setMat4("projection", projection); // note: currently we set the projection matrix each frame, but since the projection matrix rarely changes it's often best practice to set it outside the main loop only once.
         ourShader.setMat4("view", view);
 
+        m_Buffer.BindBufferToAttrib(0, 3, 5 * sizeof(float), 0);
+        m_Buffer.BindBufferToAttrib(1, 2, 5 * sizeof(float), (3 * sizeof(float)));
+
         // render boxes
         for (unsigned int i = 0; i < 10; i++)
         {
             shape.DrawCube(cubePositions[i], true, 50.0f, i, ourShader);
-        }    
+        }
+
+        //posBuff.BindBufferToAttrib(0, 3, 3 * sizeof(float), 0);
+        //uvBuff.BindBufferToAttrib(1, 2, 2 * sizeof(float), 0);
+        //
+        //
+        //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO);
+        //
+        ////MakeSphere.Bind();
+        //MakeSphere.Draw();
+        //
+        //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
         SDL_GL_SwapWindow(win);
 	}
     glDeleteVertexArrays(1, &VAO);

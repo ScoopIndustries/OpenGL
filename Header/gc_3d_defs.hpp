@@ -47,6 +47,7 @@ namespace GC_3D
 
       void Bind() const;
       void Draw() const;
+      Geometry MakeSphere(float radius);
   };
 
  
@@ -56,5 +57,5 @@ namespace GC_3D
       vec3 m_Center;
       float m_Radius;
   };
-
+    
 }

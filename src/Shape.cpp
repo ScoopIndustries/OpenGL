@@ -16,5 +16,4 @@ namespace GC_3D
 		shader.setMat4("model", model);
 		glDrawArrays(GL_TRIANGLES, 0, 36);
 	}
-
 }

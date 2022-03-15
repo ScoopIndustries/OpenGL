@@ -4,7 +4,8 @@
 class Buffer
 {
     GLuint m_buffer;
-    
+    GLuint elementBuffer;
+    std::vector<unsigned int> indices;
 
 public:
     void CreateBuffer(const GLfloat* iData, size_t iSize);
