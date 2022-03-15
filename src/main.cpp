@@ -58,8 +58,8 @@ int main(int argc, char* argv[])
     {
         std::cout << MakeSphere.m_Pos[i].x << ' ' << MakeSphere.m_Pos[i].y << ' ' << MakeSphere.m_Pos[i].z << std::endl;   // problem line
     }
-	Shader ourShader = Shader("D:/WKLEIN/OpenGL/Shader/SimpleVertexShader.vertexshader", "D:/WKLEIN/OpenGL/Shader/SimpleFragmentShader.fragmentshader");
-	//Shader ourShader = Shader("D:/ProjetOPENGL/OpenGL/Shader/SimpleVertexShader.vertexshader", "D:/ProjetOPENGL/OpenGL/Shader/SimpleFragmentShader.fragmentshader");
+	//Shader ourShader = Shader("D:/WKLEIN/OpenGL/Shader/SimpleVertexShader.vertexshader", "D:/WKLEIN/OpenGL/Shader/SimpleFragmentShader.fragmentshader");
+	Shader ourShader = Shader("D:/ProjetOPENGL/OpenGL/Shader/SimpleVertexShader.vertexshader", "D:/ProjetOPENGL/OpenGL/Shader/SimpleFragmentShader.fragmentshader");
 
     glEnable(GL_DEPTH_TEST);
 
@@ -86,19 +86,19 @@ int main(int argc, char* argv[])
     m_Buffer.BindBufferToAttrib(0, 3, 5 * sizeof(float), 0);
     m_Buffer.BindBufferToAttrib(1, 2, 5 * sizeof(float), (3 * sizeof(float)));
 
-    //Buffer posBuff, normBuff, uvBuff;
-    //
-    //posBuff.CreateBuffer((float const*)MakeSphere.m_Pos.data(), MakeSphere.m_Pos.size()* sizeof(vec3));
-    //normBuff.CreateBuffer((float const*)MakeSphere.m_Normals.data(), MakeSphere.m_Normals.size() * sizeof(vec3));
-    //uvBuff.CreateBuffer((float const*)MakeSphere.m_TexCoord.data(), MakeSphere.m_TexCoord.size() * sizeof(vec3));
-    //
-    //posBuff.BindBufferToAttrib(0, 3, 3 * sizeof(float), 0);
-    //uvBuff.BindBufferToAttrib(1, 2, 2 * sizeof(float), 0);
-    //
-    //uint32_t IBO;
-    //glGenBuffers(1, &IBO);
-    //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO);
-    //glBufferData(GL_ELEMENT_ARRAY_BUFFER, MakeSphere.m_Indices.size(), MakeSphere.m_Indices.data(), GL_STATIC_DRAW);
+    Buffer posBuff, normBuff, uvBuff;
+     
+    posBuff.CreateBuffer((float const*)MakeSphere.m_Pos.data(), MakeSphere.m_Pos.size()* sizeof(vec3));
+    normBuff.CreateBuffer((float const*)MakeSphere.m_Normals.data(), MakeSphere.m_Normals.size() * sizeof(vec3));
+    uvBuff.CreateBuffer((float const*)MakeSphere.m_TexCoord.data(), MakeSphere.m_TexCoord.size() * sizeof(vec3));
+    
+    posBuff.BindBufferToAttrib(0, 3, 3 * sizeof(float), 0);
+    uvBuff.BindBufferToAttrib(1, 2, 2 * sizeof(float), 0);
+    
+    uint32_t IBO;
+    glGenBuffers(1, &IBO);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, MakeSphere.m_Indices.size(), MakeSphere.m_Indices.data(), GL_STATIC_DRAW);
 
     //MakeSphere.Bind();
     //MakeSphere.Draw();
@@ -122,8 +122,8 @@ int main(int argc, char* argv[])
     int width, height, nrChannels;
     stbi_set_flip_vertically_on_load(false); // tell stb_image.h to flip loaded texture's on the y-axis.
     // The FileSystem::getPath(...) is part of the GitHub repository so we can find files on any IDE/platform; replace it with your own image path.
-    //unsigned char* data = stbi_load("D:/ProjetOPENGL/OpenGL/Sprite/container.jpg", &width, &height, &nrChannels, 0);
-    unsigned char* data = stbi_load("D:/WKLEIN/OpenGL/Sprite/container.jpg", &width, &height, &nrChannels, 0);
+    unsigned char* data = stbi_load("D:/ProjetOPENGL/OpenGL/Sprite/container.jpg", &width, &height, &nrChannels, 0);
+    //unsigned char* data = stbi_load("D:/WKLEIN/OpenGL/Sprite/container.jpg", &width, &height, &nrChannels, 0);
     if (data)
     {
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
@@ -145,8 +145,8 @@ int main(int argc, char* argv[])
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     // load image, create texture and generate mipmaps
-    data = stbi_load("D:/WKLEIN/OpenGL/Sprite/awesomeface.png", &width, &height, &nrChannels, 0);
-    //data = stbi_load("D:/ProjetOPENGL/OpenGL/Sprite/awesomeface.png", &width, &height, &nrChannels, 0);
+    //data = stbi_load("D:/WKLEIN/OpenGL/Sprite/awesomeface.png", &width, &height, &nrChannels, 0);
+    data = stbi_load("D:/ProjetOPENGL/OpenGL/Sprite/awesomeface.png", &width, &height, &nrChannels, 0);
     if (data)
     {
         // note that the awesomeface.png has transparency and thus an alpha channel, so make sure to tell OpenGL the data type is of GL_RGBA
@@ -252,16 +252,16 @@ int main(int argc, char* argv[])
             shape.DrawCube(cubePositions[i], true, 50.0f, i, ourShader);
         }
 
-        //posBuff.BindBufferToAttrib(0, 3, 3 * sizeof(float), 0);
-        //uvBuff.BindBufferToAttrib(1, 2, 2 * sizeof(float), 0);
-        //
-        //
-        //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO);
-        //
-        ////MakeSphere.Bind();
-        //MakeSphere.Draw();
-        //
-        //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+        posBuff.BindBufferToAttrib(0, 3, 3 * sizeof(float), 0);
+        uvBuff.BindBufferToAttrib(1, 2, 2 * sizeof(float), 0);
+        
+        
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO);
+        
+        MakeSphere.Bind();
+        MakeSphere.Draw();
+        
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
         SDL_GL_SwapWindow(win);
 	}
