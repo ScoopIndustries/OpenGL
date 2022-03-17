@@ -51,6 +51,7 @@ int main(int argc, char* argv[])
 	//Initialization GLEW
 	glewInit();
     Shape shape;
+    std::vector<Shape> table;
     Buffer m_Buffer;
     Geometry MakeSphere;
     MakeSphere = MakeSphere.MakeSphere(1.0f);
@@ -58,23 +59,24 @@ int main(int argc, char* argv[])
     {
         std::cout << MakeSphere.m_Pos[i].x << ' ' << MakeSphere.m_Pos[i].y << ' ' << MakeSphere.m_Pos[i].z << std::endl;   // problem line
     }
-	//Shader ourShader = Shader("D:/WKLEIN/OpenGL/Shader/SimpleVertexShader.vertexshader", "D:/WKLEIN/OpenGL/Shader/SimpleFragmentShader.fragmentshader");
-	Shader ourShader = Shader("D:/ProjetOPENGL/OpenGL/Shader/SimpleVertexShader.vertexshader", "D:/ProjetOPENGL/OpenGL/Shader/SimpleFragmentShader.fragmentshader");
+	Shader ourShader = Shader("D:/WKLEIN/OpenGL/Shader/SimpleVertexShader.vertexshader", "D:/WKLEIN/OpenGL/Shader/SimpleFragmentShader.fragmentshader");
+	//Shader ourShader = Shader("D:/ProjetOPENGL/OpenGL/Shader/SimpleVertexShader.vertexshader", "D:/ProjetOPENGL/OpenGL/Shader/SimpleFragmentShader.fragmentshader");
 
     glEnable(GL_DEPTH_TEST);
 
     // world space positions of our cubes
     glm::vec3 cubePositions[] = {
-        glm::vec3(0.0f,  0.0f,  0.0f),
-        glm::vec3(2.0f,  5.0f, -15.0f),
-        glm::vec3(-1.5f, -2.2f, -2.5f),
-        glm::vec3(-3.8f, -2.0f, -12.3f),
-        glm::vec3(2.4f, -0.4f, -3.5f),
-        glm::vec3(-1.7f,  3.0f, -7.5f),
-        glm::vec3(1.3f, -2.0f, -2.5f),
-        glm::vec3(1.5f,  2.0f, -2.5f),
-        glm::vec3(1.5f,  0.2f, -1.5f),
-        glm::vec3(-1.3f,  1.0f, -1.5f)
+        glm::vec3(0.0f,  0.0f, 0.0f),
+        glm::vec3(2.0f,  0.0f, 0.0f),
+        glm::vec3(4.0f,  0.0f, 0.0f),
+        glm::vec3(6.0f,  0.0f, 0.0f),
+        glm::vec3(8.0f,  0.0f, 0.0f),
+        glm::vec3(10.0f, 0.0f, 0.0f),
+        glm::vec3(12.0f, 0.0f, 0.0f),
+        glm::vec3(14.0f, 0.0f, 0.0f),
+        glm::vec3(16.0f, 0.0f, 0.0f),
+        glm::vec3(18.0f, 0.0f, 0.0f),
+        glm::vec3(20.0f, 0.0f, 0.0f)
     };
     
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -100,9 +102,6 @@ int main(int argc, char* argv[])
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, MakeSphere.m_Indices.size(), MakeSphere.m_Indices.data(), GL_STATIC_DRAW);
 
-    //MakeSphere.Bind();
-    //MakeSphere.Draw();
-
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     
     // load and create a texture -- Texture
@@ -122,8 +121,8 @@ int main(int argc, char* argv[])
     int width, height, nrChannels;
     stbi_set_flip_vertically_on_load(false); // tell stb_image.h to flip loaded texture's on the y-axis.
     // The FileSystem::getPath(...) is part of the GitHub repository so we can find files on any IDE/platform; replace it with your own image path.
-    unsigned char* data = stbi_load("D:/ProjetOPENGL/OpenGL/Sprite/container.jpg", &width, &height, &nrChannels, 0);
-    //unsigned char* data = stbi_load("D:/WKLEIN/OpenGL/Sprite/container.jpg", &width, &height, &nrChannels, 0);
+    //unsigned char* data = stbi_load("D:/ProjetOPENGL/OpenGL/Sprite/container.jpg", &width, &height, &nrChannels, 0);
+    unsigned char* data = stbi_load("D:/WKLEIN/OpenGL/Sprite/container.jpg", &width, &height, &nrChannels, 0);
     if (data)
     {
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
@@ -145,8 +144,8 @@ int main(int argc, char* argv[])
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     // load image, create texture and generate mipmaps
-    //data = stbi_load("D:/WKLEIN/OpenGL/Sprite/awesomeface.png", &width, &height, &nrChannels, 0);
-    data = stbi_load("D:/ProjetOPENGL/OpenGL/Sprite/awesomeface.png", &width, &height, &nrChannels, 0);
+    data = stbi_load("D:/WKLEIN/OpenGL/Sprite/awesomeface.png", &width, &height, &nrChannels, 0);
+    //data = stbi_load("D:/ProjetOPENGL/OpenGL/Sprite/awesomeface.png", &width, &height, &nrChannels, 0);
     if (data)
     {
         // note that the awesomeface.png has transparency and thus an alpha channel, so make sure to tell OpenGL the data type is of GL_RGBA
@@ -249,19 +248,20 @@ int main(int argc, char* argv[])
         // render boxes
         for (unsigned int i = 0; i < 10; i++)
         {
-            shape.DrawCube(cubePositions[i], true, 50.0f, i, ourShader);
+            shape.DrawCube(cubePositions[i], false, 0.0f, i, ourShader, 1.0f);
         }
 
+        
         posBuff.BindBufferToAttrib(0, 3, 3 * sizeof(float), 0);
         uvBuff.BindBufferToAttrib(1, 2, 2 * sizeof(float), 0);
         
         
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO);
+        //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO);
         
-        MakeSphere.Bind();
-        MakeSphere.Draw();
+        //MakeSphere.Bind();
+        //MakeSphere.Draw();
         
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+        //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
         SDL_GL_SwapWindow(win);
 	}

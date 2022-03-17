@@ -38,7 +38,7 @@ namespace GC_3D
     {
         if (!m_Indices.empty())
         {
-            glDrawElements(GL_TRIANGLES, m_Indices.size(), 0, m_Indices.data());
+            glDrawElements(GL_TRIANGLES, m_Indices.size(), GL_UNSIGNED_INT, m_Indices.data());
         }
         else
         {
