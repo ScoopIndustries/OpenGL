@@ -2,12 +2,11 @@
 #include "gc_3d_defs.hpp"
 #include "../Header/shader.hpp"
 
-
 namespace GC_3D
 {
-	class Shape
+	/*class Shape
 	{
-		
+        Geometry m_geom;
 	public:
         void DrawCube(vec3 Position, bool rotateShape, float angle, float i, Shader shader, float scale);
 	};
@@ -54,6 +53,6 @@ namespace GC_3D
      0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
     -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
     -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
-    };
+    };*/
 
 }

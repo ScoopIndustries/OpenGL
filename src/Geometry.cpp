@@ -1,49 +1,37 @@
+#pragma once
 #include "../Header/gc_3d_defs.hpp"
+#include "../Header/Buffer.hpp"
+#include "../Header/shader.hpp"
 
 namespace GC_3D
 {
     void Geometry::Bind() const
     {
-        // Set each attribute pointer, if we have data for it.
-        if (!m_Pos.empty())
-        {
-            glEnableClientState(GL_VERTEX_ARRAY);
-            glVertexPointer(3, GL_FLOAT, sizeof(vec3), m_Pos.data());
-        }
-        else
-        {
-            glDisableClientState(GL_VERTEX_ARRAY);
-        }
-        if (!m_Normals.empty())
-        {
-            glEnableClientState(GL_NORMAL_ARRAY);
-            glNormalPointer(GL_FLOAT, sizeof(vec3), m_Normals.data());
-        }
-        else
-        {
-            glDisableClientState(GL_NORMAL_ARRAY);
-        }
-        if (!m_TexCoord.empty())
-        {
-            glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-            glTexCoordPointer(2, GL_FLOAT, sizeof(vec2), m_TexCoord.data());
-        }
-        else
-        {
-            glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-        }
+        Buffer m_Buffer;
+        m_Buffer.CreateBuffer(CubeVertices, sizeof(CubeVertices));
+        m_Buffer.BindBufferToAttrib(0, 3, 5 * sizeof(float), 0);
+        m_Buffer.BindBufferToAttrib(1, 2, 5 * sizeof(float), (3 * sizeof(float)));
     }
 
-    void Geometry::Draw() const
+    mat4 Geometry::CalculateMatrice(vec3 Position, bool rotateShape, float angle, float i, Shader shader, float scale) const
     {
-        if (!m_Indices.empty())
+        Bind();
+        glm::mat4 model = glm::mat4(1.0f);
+        model = glm::translate(model, Position) * glm::scale(glm::vec3(scale, scale, scale));
+        if(rotateShape)
         {
-            glDrawElements(GL_TRIANGLES, m_Indices.size(), GL_UNSIGNED_INT, m_Indices.data());
+            float Rangle = angle * i;
+            model = glm::rotate(model, glm::radians(Rangle), glm::vec3(1.0f, 0.3f, 0.5f));
         }
-        else
-        {
-            glDrawArrays(GL_TRIANGLES, 0, m_Pos.size());
-        }
+
+        shader.setMat4("model", model);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
+        return model;
+    }
+
+    void Geometry::Draw()
+    {
+
     }
 
     Geometry Geometry::MakeSphere(float iRadius)

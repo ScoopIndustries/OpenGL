@@ -8,7 +8,7 @@
 #include "../Header/camera.hpp"
 #include "../Header/Buffer.hpp"
 #include "../Header/shader.hpp"
-#include "../Header/Shape.hpp"
+
 
 using namespace GC_3D;
 
@@ -50,15 +50,17 @@ int main(int argc, char* argv[])
 
 	//Initialization GLEW
 	glewInit();
-    Shape shape;
-    std::vector<Shape> table;
+
+
+
+    Scene scene;
+    std::vector<mat4> _model;
+    std::vector<vec3> _pos;
+
+
     Buffer m_Buffer;
-    Geometry MakeSphere;
-    MakeSphere = MakeSphere.MakeSphere(1.0f);
-    for (int i = 0; i < MakeSphere.m_Pos.size(); i++)
-    {
-        std::cout << MakeSphere.m_Pos[i].x << ' ' << MakeSphere.m_Pos[i].y << ' ' << MakeSphere.m_Pos[i].z << std::endl;   // problem line
-    }
+    Geometry Geom;
+
 	Shader ourShader = Shader("D:/WKLEIN/OpenGL/Shader/SimpleVertexShader.vertexshader", "D:/WKLEIN/OpenGL/Shader/SimpleFragmentShader.fragmentshader");
 	//Shader ourShader = Shader("D:/ProjetOPENGL/OpenGL/Shader/SimpleVertexShader.vertexshader", "D:/ProjetOPENGL/OpenGL/Shader/SimpleFragmentShader.fragmentshader");
 
@@ -87,20 +89,6 @@ int main(int argc, char* argv[])
     m_Buffer.CreateBuffer(CubeVertices, sizeof(CubeVertices));
     m_Buffer.BindBufferToAttrib(0, 3, 5 * sizeof(float), 0);
     m_Buffer.BindBufferToAttrib(1, 2, 5 * sizeof(float), (3 * sizeof(float)));
-
-    Buffer posBuff, normBuff, uvBuff;
-     
-    posBuff.CreateBuffer((float const*)MakeSphere.m_Pos.data(), MakeSphere.m_Pos.size()* sizeof(vec3));
-    normBuff.CreateBuffer((float const*)MakeSphere.m_Normals.data(), MakeSphere.m_Normals.size() * sizeof(vec3));
-    uvBuff.CreateBuffer((float const*)MakeSphere.m_TexCoord.data(), MakeSphere.m_TexCoord.size() * sizeof(vec3));
-    
-    posBuff.BindBufferToAttrib(0, 3, 3 * sizeof(float), 0);
-    uvBuff.BindBufferToAttrib(1, 2, 2 * sizeof(float), 0);
-    
-    uint32_t IBO;
-    glGenBuffers(1, &IBO);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, MakeSphere.m_Indices.size(), MakeSphere.m_Indices.data(), GL_STATIC_DRAW);
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     
@@ -248,12 +236,15 @@ int main(int argc, char* argv[])
         // render boxes
         for (unsigned int i = 0; i < 10; i++)
         {
-            shape.DrawCube(cubePositions[i], false, 0.0f, i, ourShader, 1.0f);
+           mat4 temp_model = Geom.Draw(cubePositions[i], false, 0.0f, i, ourShader, 1.0f);
+           _model.push_back(temp_model);
+           _pos.push_back(cubePositions[i]);
+           std::cout << "N° -> " << _model.size() << std::endl;
         }
 
         
-        posBuff.BindBufferToAttrib(0, 3, 3 * sizeof(float), 0);
-        uvBuff.BindBufferToAttrib(1, 2, 2 * sizeof(float), 0);
+        //posBuff.BindBufferToAttrib(0, 3, 3 * sizeof(float), 0);
+        //uvBuff.BindBufferToAttrib(1, 2, 2 * sizeof(float), 0);
         
         
         //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO);
